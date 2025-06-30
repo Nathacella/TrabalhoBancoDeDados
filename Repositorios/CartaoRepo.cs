@@ -18,13 +18,19 @@ public class CartaoRepo
     {
         using var conexao = Conexao.ObterConexao();
         conexao.Open();
-        var cmd = new MySqlCommand("SELECT * FROM cartao", conexao);
+
+        var cmd = new MySqlCommand(@"
+        SELECT ct.id_cartao, ct.id_cliente, ct.saldo, ct.status, c.nome
+        FROM cartao ct
+        JOIN cliente c ON ct.id_cliente = c.id_cliente", conexao);
+
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            Console.WriteLine($"ID: {reader["id_cartao"]} | Cliente: {reader["id_cliente"]} | Saldo: {reader["saldo"]} | Status: {reader["status"]}");
+            Console.WriteLine($"Cartão ID: {reader["id_cartao"]} | Cliente: {reader["nome"]} (ID {reader["id_cliente"]}) | Saldo: {reader["saldo"]} | Status: {reader["status"]}");
         }
     }
+
 
     public void Atualizar(int id, decimal saldo, string status)
     {

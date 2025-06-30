@@ -13,7 +13,7 @@ CREATE TABLE cliente (
 -- Tabela cartao
 CREATE TABLE cartao (
     id_cartao INT AUTO_INCREMENT PRIMARY KEY,
-    id_cliente INT NOT NULL,
+    id_cliente INT NOT NULL UNIQUE,
     saldo DECIMAL(10,2) DEFAULT 0,
     status VARCHAR(20) DEFAULT 'ativo',
     FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente)

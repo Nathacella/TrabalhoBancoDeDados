@@ -18,13 +18,20 @@ public class ClienteRepo
     {
         using var conexao = Conexao.ObterConexao();
         conexao.Open();
-        var cmd = new MySqlCommand("SELECT * FROM cliente", conexao);
+
+        var cmd = new MySqlCommand(@"
+        SELECT c.id_cliente, c.nome, c.cpf, c.email, ct.id_cartao
+        FROM cliente c
+        LEFT JOIN cartao ct ON c.id_cliente = ct.id_cliente", conexao);
+
         using var reader = cmd.ExecuteReader();
         while (reader.Read())
         {
-            Console.WriteLine($"ID: {reader["id_cliente"]} | Nome: {reader["nome"]} | CPF: {reader["cpf"]} | Email: {reader["email"]}");
+            string cartaoInfo = reader["id_cartao"] != DBNull.Value ? reader["id_cartao"].ToString() : "Nenhum cartão";
+            Console.WriteLine($"ID: {reader["id_cliente"]} | Nome: {reader["nome"]} | CPF: {reader["cpf"]} | Email: {reader["email"]} | Cartão: {cartaoInfo}");
         }
     }
+
 
     public void Atualizar(int id, string nome, string cpf, string email)
     {
